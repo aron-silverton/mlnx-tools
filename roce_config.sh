@@ -185,7 +185,7 @@ enable_pfc_willing() {
 }
 
 set_cc_algo_mask() {
-	yes | mstconfig -d 0000:30:00.0 set ROCE_CC_PRIO_MASK_P1=255 ROCE_CC_PRIO_MASK_P2=255 \
+	yes | mstconfig -d $PCI_ADDR set ROCE_CC_PRIO_MASK_P1=255 ROCE_CC_PRIO_MASK_P2=255 \
 	ROCE_CC_ALGORITHM_P1=ECN ROCE_CC_ALGORITHM_P2=ECN > /dev/null
 	if [[ $? != 0 ]] ; then
 		>&2 echo " - Setting congestion control algo/mask failed"
