@@ -29,12 +29,9 @@
 #NETDEV is the netdev interface name (e.g.: eth4)
 #IBDEV is the corresponding IB device (e.g.: mlx5_0)
 #PORT is the corresponding IB port
-#W_DCBX identifies if dynamic/static config is preferred
 
 NETDEV=""
-W_DCBX=1
 TRUST_MODE=dscp
-PFC_STRING=1,2,3,4,5,6
 CC_FLAG=1
 SET_TOS=0
 MAJOR_VERSION=1
@@ -45,19 +42,12 @@ echo ""
 print_usage() {
 #Use this script to configure RoCE on Oracle setups
   echo "Usage:
-	roce_config -i <netdev> [-d <n>] [-t <trust_mode>]
-			[-p <pfc_string>] [-q <default_tos>]
+	roce_config -i <netdev> [-t <trust_mode>] [-q <default_tos>]
 
 Options:
  -i <interface>		enter the interface name(required)
 
- -d <n>			n is 1 if dynamic config(DCBX)is preferred,
-			  is 0 if static config is preferred (default: 1)
-
  -t <trust_mode>	set priority trust mode to pcp or dscp(default: dscp)
-
- -p <pfc_string>	enter the string of priority lanes to enable pfc for them
-			(default: 1,2,3,4,5,6). This is ignored for dynamic config.
 
  -q <default_tos>	set the default tos to a value between 0-255. If this option
 			is not used, default tos will remain unchanged.
@@ -128,62 +118,6 @@ config_trust_mode() {
 	fi
 }
 
-start_lldpad() {
-	if [[ $OS_VERSION == "6" ]] ; then
-		service lldpad start > /dev/null
-	else
-		/bin/systemctl start lldpad.service > /dev/null
-	fi
-	if [[ $? != 0 ]] ; then
-		>&2 echo " - Starting lldpad failed; exiting"
-		exit 1
-	else
-		echo " + Service lldpad is running"
-	fi
-}
-
-#This generic lldpad configuration(not related to RoCE)
-do_lldpad_config() {
-	lldptool set-lldp -i $NETDEV adminStatus=rxtx > /dev/null &&
-	lldptool -T -i $NETDEV -V sysName enableTx=yes > /dev/null &&
-	lldptool -T -i $NETDEV -V portDesc enableTx=yes > /dev/null &&
-	lldptool -T -i $NETDEV -V sysDesc enableTx=yes > /dev/null &&
-	lldptool -T -i $NETDEV -V sysCap enableTx=yes > /dev/null &&
-	lldptool -T -i $NETDEV -V mngAddr enableTx=yes > /dev/null
-	if [[ $? != 0 ]] ; then
-		>&2 echo " - Generic lldpad configuration failed"
-		exit 1
-	else
-		echo " + Finished generic lldpad configuration"
-	fi
-}
-
-config_pfc() {
-#Alternatively pfc config could be done by using mlnx_qos tool
-#	mlnx_qos -i $NETDEV --pfc 0,1,1,1,1,1,1,0
-
-	lldptool -T -i $NETDEV -V PFC enableTx=yes > /dev/null &&
-	lldptool -T -i $NETDEV -V PFC willing=no > /dev/null &&
-	lldptool -T -i $NETDEV -V PFC enabled=$PFC_STRING > /dev/null
-	if [[ $? != 0 ]] ; then
-		>&2 echo " - Configuring PFC failed for priority lanes $PFC_STRING"
-		exit 1
-	else
-		echo " + PFC is configured for priority lanes $PFC_STRING"
-	fi
-}
-
-enable_pfc_willing() {
-	lldptool -T -i $NETDEV -V PFC enableTx=yes > /dev/null &&
-	lldptool -T -i $NETDEV -V PFC willing=yes > /dev/null
-	if [[ $? != 0 ]] ; then
-		>&2 echo " - Enabling PFC willing bit failed"
-		exit 1
-	else
-		echo " + Enabled PFC willing bit"
-	fi
-}
-
 set_cc_algo_mask() {
 	yes | mstconfig -d $PCI_ADDR set ROCE_CC_PRIO_MASK_P1=255 ROCE_CC_PRIO_MASK_P2=255 \
 	ROCE_CC_ALGORITHM_P1=ECN ROCE_CC_ALGORITHM_P2=ECN > /dev/null
@@ -249,14 +183,8 @@ case $1 in
 	-i )	shift
 		NETDEV=$1
 		;;
-	-d )	shift
-		W_DCBX=$1
-		;;
 	-t )	shift
 		TRUST_MODE=$1
-		;;
-	-p )	shift
-		PFC_STRING=$1
 		;;
 	-q )	shift
 		DEFAULT_TOS=$1
@@ -298,11 +226,6 @@ if [ -z "$IBDEV" ] ; then
 fi
 PORT="$(ibdev2netdev | grep $NETDEV | head -1 | cut -f 3 -d " ")"
 echo "NETDEV=$NETDEV; IBDEV=$IBDEV; PORT=$PORT"
-
-if [[ $W_DCBX != "1" && $W_DCBX != "0" ]] ; then
-	>&2 echo " - Option -d can take only 1 or 0 as input"
-	exit 1
-fi
 
 if [[ $TRUST_MODE != "dscp" && $TRUST_MODE != "pcp" ]] ; then
 	>&2 echo " - Option -t can take only dscp or pcp as input"
@@ -367,14 +290,6 @@ if (! cat /proc/mounts |grep /sys/kernel/debug > /dev/null) ; then
 fi
 enable_congestion_control
 set_cnp_priority
-
-start_lldpad
-do_lldpad_config
-if [[ $W_DCBX == "0" ]] ; then
-	config_pfc
-else
-	enable_pfc_willing
-fi
 
 echo ""
 if [[ $CC_FLAG = "0" ]] ; then
