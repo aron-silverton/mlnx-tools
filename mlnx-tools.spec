@@ -1,6 +1,6 @@
 Summary: Mellanox userland tools and scripts
 Name: mlnx-tools
-Version: 1.5.3
+Version: 1.5.4
 Release: 0%{?dist}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
@@ -47,6 +47,7 @@ install -D -m 0755 ofed_scripts/cma_roce_mode %{buildroot}%{_sbindir}/cma_roce_m
 install -D -m 0755 ofed_scripts/ibdev2netdev %{buildroot}%{_bindir}/ibdev2netdev
 install -D -m 0755 ofed_scripts/show_gids %{buildroot}%{_sbindir}/show_gids
 install -D -m 0755 roce_config.sh %{buildroot}%{_bindir}/roce_config
+install -D -m 0755 roce_config_persistent.sh %{buildroot}%{_bindir}/roce_config_persistent
 
 if [ "$(echo %{_prefix} | sed -e 's@/@@g')" != "usr" ]; then
 	conf_env=/etc/profile.d/mlnx-tools.sh
@@ -67,12 +68,12 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.3-0
+* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.4-0
 - [Orabug: 27284449] Add Oracle copyright and remove Mellanox copyright
-  from spec file
 - [Orabug: 27284461] Remove obsolete installation script
 - [Orabug: 27290597] Add OS distribution to generated package name
 - [Orabug: 27290626] Add Python build dependency
+- [Orabug: 27290690] Include roce_config_persistent in the RPM
 
 * Wed Nov 1 2017 Vladimir Sokolovsky <vlad@mellanox.com>
 - Initial packaging
