@@ -1,6 +1,6 @@
 Summary: Mellanox userland tools and scripts
 Name: mlnx-tools
-Version: 1.5.0
+Version: 1.5.1
 Release: 0%{?_dist}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
@@ -65,9 +65,10 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.0-0
+* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.1-0
 - [Orabug: 27284449] Add Oracle copyright and remove Mellanox copyright
   from spec file
+- [Orabug: 27284461] Remove obsolete installation script
 
 * Wed Nov 1 2017 Vladimir Sokolovsky <vlad@mellanox.com>
 - Initial packaging
