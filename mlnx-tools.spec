@@ -1,6 +1,6 @@
 Summary: Mellanox userland tools and scripts
 Name: mlnx-tools
-Version: 1.5.2
+Version: 1.5.3
 Release: 0%{?dist}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
@@ -10,6 +10,7 @@ BuildRoot: %{?build_root:%{build_root}}%{!?build_root:/var/tmp/%{name}}
 Vendor: Mellanox Technologies
 Requires: perl
 Requires: python
+BuildRequires: python2
 
 %description
 Mellanox userland tools and scripts
@@ -66,11 +67,12 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.2-0
+* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.3-0
 - [Orabug: 27284449] Add Oracle copyright and remove Mellanox copyright
   from spec file
 - [Orabug: 27284461] Remove obsolete installation script
 - [Orabug: 27290597] Add OS distribution to generated package name
+- [Orabug: 27290626] Add Python build dependency
 
 * Wed Nov 1 2017 Vladimir Sokolovsky <vlad@mellanox.com>
 - Initial packaging
