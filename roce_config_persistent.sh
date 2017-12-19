@@ -1,6 +1,9 @@
 #!/bin/bash
-#NETDEV is the netdev interface name (e.g.: eth4)
-#W_DCBX identifies if dynamic/static config is preferred
+#
+# Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
+#
+# NETDEV is the netdev interface name (e.g.: eth4)
+# W_DCBX identifies if dynamic/static config is preferred
 
 NETDEV=""
 IPADDR=""
