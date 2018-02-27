@@ -10,16 +10,17 @@
 NETDEV=""
 TRUST_MODE=dscp
 CC_FLAG=1
-SET_TOS=0
+DEFAULT_TOS=32
+TOS_MAP=32,32,64,96,128,160,192,224
 MAJOR_VERSION=1
-MINOR_VERSION=1
+MINOR_VERSION=2
 
 echo ""
 
 print_usage() {
 #Use this script to configure RoCE on Oracle setups
   echo "Usage:
-	roce_config -i <netdev> [-t <trust_mode>] [-q <default_tos>]
+	roce_config -i <netdev> [-t <trust_mode>] [-q <default_tos>] [-Q <tos_map_list>]
 
 Options:
  -i <interface>		enter the interface name(required)
@@ -28,6 +29,9 @@ Options:
 
  -q <default_tos>	set the default tos to a value between 0-255. If this option
 			is not used, default tos will remain unchanged.
+
+ -Q <tos_map_list>      set the tos_map_N values according to the comma-seperated list
+                        specified in the argument <tos_map_list>
 
 Example:
 	roce_config -i eth4 -d 0 -t pcp
@@ -54,29 +58,25 @@ set_tos_mapping() {
 		return
 	fi
 
-	echo 32 > /sys/kernel/config/rdma_cm/$IBDEV/tos_map/tos_map_0
-	if [[ $? != 0 ]] ; then
-		>&2 echo " - Failed to set tos mapping"
-		exit 1
-	fi
-	for i in {1..7}
+	(( i = 0 ))
+	for mapping in ${TOS_MAP//,/ }
 	do
-		let "mapping=$i<<5"
-		echo $mapping > /sys/kernel/config/rdma_cm/$IBDEV/tos_map/tos_map_$i
+		echo "$mapping" > /sys/kernel/config/rdma_cm/$IBDEV/tos_map/tos_map_$i
 		if [[ $? != 0 ]] ; then
 			>&2 echo " - Failed to set tos mapping"
 			exit 1
+		fi
+		if (( ++i >= 8 ))
+		then
+			break
 		fi
 	done
 
 	echo " + Tos mapping is set"
 }
 
-set_deafult_tos() {
-	if [[ $SET_TOS == "0" ]] ; then
-		return
-	fi
-	echo $DEFAULT_TOS > /sys/kernel/config/rdma_cm/$IBDEV/ports/$PORT/default_roce_tos
+set_default_tos() {
+	echo "$DEFAULT_TOS" > /sys/kernel/config/rdma_cm/$IBDEV/ports/$PORT/default_roce_tos
 	if [[ $? != 0 ]] ; then
 		>&2 echo " - Failed to set default roce tos"
 		exit 1
@@ -165,7 +165,9 @@ case $1 in
 		;;
 	-q )	shift
 		DEFAULT_TOS=$1
-		SET_TOS=1
+		;;
+	-Q )	shift
+		TOS_MAP=$1
 		;;
 	-v )	print_version
 		exit
@@ -209,7 +211,7 @@ if [[ $TRUST_MODE != "dscp" && $TRUST_MODE != "pcp" ]] ; then
 	exit 1
 fi
 
-if [[ $SET_TOS == "1" && $DEFAULT_TOS -gt "255" ]] ; then
+if [[ $DEFAULT_TOS -gt "255" ]] ; then
 	>&2 echo " - Option -q (default tos) can only take values between 0-255"
 	exit 1
 fi
@@ -250,7 +252,7 @@ fi
 
 set_rocev2_default
 set_tos_mapping
-set_deafult_tos
+set_default_tos
 config_trust_mode
 
 PCI_ADDR="$(ethtool -i $NETDEV | grep "bus-info" | cut -f 2 -d " ")"
