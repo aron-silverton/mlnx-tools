@@ -46,8 +46,8 @@ cd -
 install -D -m 0755 ofed_scripts/cma_roce_mode %{buildroot}%{_sbindir}/cma_roce_mode
 install -D -m 0755 ofed_scripts/ibdev2netdev %{buildroot}%{_bindir}/ibdev2netdev
 install -D -m 0755 ofed_scripts/show_gids %{buildroot}%{_sbindir}/show_gids
-install -D -m 0755 roce_config.sh %{buildroot}%{_bindir}/roce_config
-install -D -m 0755 roce_config_persistent.sh %{buildroot}%{_bindir}/roce_config_persistent
+install -D -m 0755 oracle/roce_config.sh %{buildroot}%{_bindir}/roce_config
+install -D -m 0755 oracle/roce_config_persistent.sh %{buildroot}%{_bindir}/roce_config_persistent
 
 if [ "$(echo %{_prefix} | sed -e 's@/@@g')" != "usr" ]; then
 	conf_env=/etc/profile.d/mlnx-tools.sh
@@ -68,7 +68,11 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Tue Dec 19 2017 Aron Silverton <aron.silverton@mellanox.com> - 1.5.4-0
+* Wed Apr 04 2018 Aron Silverton <aron.silverton@oracle.com>
+- Move Oracle files to /oracle (Aron Silverton) [Orabug: 27812014]
+- Fix bad email address in changelog
+
+* Tue Dec 19 2017 Aron Silverton <aron.silverton@oracle.com> - 1.5.4-0
 - [Orabug: 27284449] Add Oracle copyright and remove Mellanox copyright
 - [Orabug: 27284461] Remove obsolete installation script
 - [Orabug: 27290597] Add OS distribution to generated package name
