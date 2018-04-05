@@ -48,6 +48,7 @@ install -D -m 0755 ofed_scripts/ibdev2netdev %{buildroot}%{_bindir}/ibdev2netdev
 install -D -m 0755 ofed_scripts/show_gids %{buildroot}%{_sbindir}/show_gids
 install -D -m 0755 oracle/roce_config.sh %{buildroot}%{_bindir}/roce_config
 install -D -m 0755 oracle/roce_config_persistent.sh %{buildroot}%{_bindir}/roce_config_persistent
+install -D -m 0755 oracle/ifup-local %{buildroot}/sbin/ifup-local
 
 if [ "$(echo %{_prefix} | sed -e 's@/@@g')" != "usr" ]; then
 	conf_env=/etc/profile.d/mlnx-tools.sh
@@ -66,8 +67,12 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_sbindir}/*
 %{_bindir}/*
+/sbin/ifup-local
 
 %changelog
+* Thu Apr 05 2018 Aron Silverton <aron.silverton@oracle.com>
+- Trigger roce_config on ifup/ifdown (Aron Silverton) [Orabug: 26364780]
+
 * Wed Apr 04 2018 Aron Silverton <aron.silverton@oracle.com>
 - Move Oracle files to /oracle (Aron Silverton) [Orabug: 27812014]
 - Fix bad email address in changelog
