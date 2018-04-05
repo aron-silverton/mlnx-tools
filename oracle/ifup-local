@@ -1,0 +1,5 @@
+#!/bin/sh
+ 
+DEVICE=${1}
+ 
+[[ -x /usr/bin/roce_config ]] && /usr/bin/roce_config -i ${DEVICE}
