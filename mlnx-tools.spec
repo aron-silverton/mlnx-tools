@@ -1,13 +1,13 @@
-Summary: Mellanox userland tools and scripts
-Name: mlnx-tools
-Version: 1.5.4
-Release: 0%{?dist}
+Summary: RDMA userland tools and scripts
+Name: oracle-rdma-tools
+Version: 0.5.8
+Release: 1%{?dist}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
 Group: Applications/System
 Source: https://github.com/aron-silverton/mlnx-tools/releases/download/v%{version}/%{name}-%{version}.tgz
 BuildRoot: %{?build_root:%{build_root}}%{!?build_root:/var/tmp/%{name}}
-Vendor: Mellanox Technologies
+Vendor: Oracle
 Requires: perl
 Requires: python
 BuildRequires: python2
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Tue May 22 2018 Aron Silverton <aron.silverton@oraclecom> - 0.5.8-1
+- Change name to "oracle-rdma-tools" and adjust version
+
 * Thu Apr 05 2018 Aron Silverton <aron.silverton@oracle.com>
 - Trigger roce_config on ifup/ifdown (Aron Silverton) [Orabug: 26364780]
 
