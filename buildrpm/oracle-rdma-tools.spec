@@ -1,7 +1,7 @@
 Summary: RDMA userland tools and scripts
 Name: oracle-rdma-tools
 Version: 0.5.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
 Group: Applications/System
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Tue Jun 12 2018 Aron Silverton <aron.silverton@oracle.com> - 0.5.8-2
+- Add Oracle build environment and rename spec file
+
 * Tue May 22 2018 Aron Silverton <aron.silverton@oraclecom> - 0.5.8-1
 - Change name to "oracle-rdma-tools" and adjust version
 
