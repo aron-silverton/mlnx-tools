@@ -1,7 +1,7 @@
 Summary: RDMA userland tools and scripts
 Name: oracle-rdma-tools
-Version: 0.5.8
-Release: 2%{?dist}
+Version: 0.6.0
+Release: 1%{?dist}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
 Group: Applications/System
@@ -69,6 +69,13 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Mon Jul 09 2018 Aron Silverton <aron.silverton@oracle.com> - 0.6.0-1
+- Add COPYING file for OpenIB.org BSD/GPLv2 (Aron Silverton)
+- Add UPL copyright notice to Oracle source (Aron Silverton)
+- Add COPYING files for individual licenses: UPL, OpenIB/BSD, GPLv2 (Aron Silverton)
+- mlnx_qos: Add dcbnl enhancments cleanup code (Parav Pandit) [Orabug: 28314239]
+- roce_config: Configure PFC using mlnx_qos (Avinash Repaka) [Orabug: 28194198]
+
 * Tue Jun 12 2018 Aron Silverton <aron.silverton@oracle.com> - 0.5.8-2
 - Add Oracle build environment and rename spec file
 
