@@ -1,7 +1,9 @@
-Summary: RDMA userland tools and scripts
+%global flavor vos
+
+Summary: RDMA userland tools and scripts (Oracle VOS)
 Name: oracle-rdma-tools
 Version: 0.6.0
-Release: 1%{?dist}
+Release: 1%{?dist}%{?flavor}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
 Group: Applications/System
@@ -14,6 +16,10 @@ BuildRequires: python2
 
 %description
 Mellanox userland tools and scripts
+
+For use on Oracle Linux systems running the Oracle Database Virtual OS
+(VOS) layer.
+
 
 %prep
 %setup -n %{name}-%{version}
@@ -69,6 +75,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Mon Aug 27 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.6.0
+- Add "vos" to RPM release number (Aron Silverton) [Orabug 28550856]
+
 * Mon Jul 09 2018 Aron Silverton <aron.silverton@oracle.com> - 0.6.0-1
 - Add COPYING file for OpenIB.org BSD/GPLv2 (Aron Silverton)
 - Add UPL copyright notice to Oracle source (Aron Silverton)
