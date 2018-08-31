@@ -48,7 +48,7 @@ TOS_MAP=32,32,64,96,128,160,192,192
 PFC_CONFIG=""
 DEFAULT_PFC_CONFIG=0,1,1,1,1,1,1,0
 MAJOR_VERSION=1
-MINOR_VERSION=4
+MINOR_VERSION=5
 
 echo ""
 
@@ -260,6 +260,19 @@ fi
 PORT="$(ibdev2netdev | grep $NETDEV | head -1 | cut -f 3 -d " ")"
 echo "NETDEV=$NETDEV; IBDEV=$IBDEV; PORT=$PORT"
 
+PCI_ADDR="$(grep PCI_SLOT_NAME /sys/class/net/$NETDEV/device/uevent | cut -d "=" -f 2)"
+if [ -z "$PCI_ADDR" ] ; then
+	>&2 echo " - Failed to obtain PCI ADDRESS for netdev \"$NETDEV\""
+	exit 1
+fi
+
+#We use cache line size to identify virtual functions. It is 00 for VFs.
+CACHE_LINE_SIZE="$(setpci -s $PCI_ADDR c.b)"
+if [[ $? != 0 ]] ; then
+	>&2 echo " - Failed to obtain Cache Line Size"
+	exit 1
+fi
+
 if [[ $TRUST_MODE != "dscp" && $TRUST_MODE != "pcp" ]] ; then
 	>&2 echo " - Option -t can take only dscp or pcp as input"
 	exit 1
@@ -304,17 +317,6 @@ if [ ! -d "/sys/kernel/config/rdma_cm/$IBDEV" ] ; then
 	fi
 fi
 
-set_rocev2_default
-set_tos_mapping
-set_default_tos
-config_trust_mode
-config_pfc
-
-PCI_ADDR="$(ethtool -i $NETDEV | grep "bus-info" | cut -f 2 -d " ")"
-if [ -z "$PCI_ADDR" ] ; then
-	>&2 echo " - Failed to obtain PCI ADDRESS for netdev \"$NETDEV\""
-	exit 1
-fi
 if (! cat /proc/mounts |grep /sys/kernel/debug > /dev/null) ; then
 	mount -t debugfs none /sys/kernel/debug
 	if [[ $? != 0 ]] ; then
@@ -322,7 +324,15 @@ if (! cat /proc/mounts |grep /sys/kernel/debug > /dev/null) ; then
 		exit 1
 	fi
 fi
-enable_congestion_control
+
+set_rocev2_default
+set_tos_mapping
+set_default_tos
+if [[ $CACHE_LINE_SIZE != "00" ]] ; then
+	config_trust_mode
+	config_pfc
+	enable_congestion_control
+fi
 set_cnp_priority
 
 echo ""
