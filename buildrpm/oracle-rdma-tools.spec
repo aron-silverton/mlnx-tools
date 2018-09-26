@@ -77,6 +77,7 @@ rm -rf %{buildroot}
 %changelog
 * Wed Sep 26 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.6.0
 - roce_config: Adjust configuration steps for VFs (Avinash Repaka) [Orabug: 27482819]
+- ifup-local: Disable running roce_config by default (Aron Silverton) [Orabug: 28122139]
 
 * Mon Aug 27 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.6.0-2
 - Add "vos" to RPM release number (Aron Silverton) [Orabug 28550856]
