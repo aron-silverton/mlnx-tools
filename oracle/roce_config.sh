@@ -332,7 +332,10 @@ if [[ $CACHE_LINE_SIZE != "00" ]] ; then
 	config_trust_mode
 	config_pfc
 	enable_congestion_control
-	set_cnp_priority
+	# set_cnp_priority() does not work in secure boot environments. This step
+	# is redundant because these settings are made in the firmware images for
+	# Exadata so we simply do not execute this function.
+	#set_cnp_priority
 fi
 
 echo ""
