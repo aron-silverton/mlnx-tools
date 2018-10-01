@@ -80,6 +80,7 @@ rm -rf %{buildroot}
 - ifup-local: Disable running roce_config by default (Aron Silverton) [Orabug: 28122139]
 - roce_config: Disable CNP configuration for VFs (Aron Silverton) [Orabug: 27482819]
 - roce_config: Disable CNP configuration (Aron Silverton) [Orabug: 28600183]
+- roce_config: Fix multi-thread race condition (Aron Silverton) [Orabug: 28730043]
 
 * Mon Aug 27 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.6.0-2
 - Add "vos" to RPM release number (Aron Silverton) [Orabug 28550856]

@@ -310,7 +310,7 @@ if [ ! -d "/sys/kernel/config/rdma_cm" ] ; then
 fi
 
 if [ ! -d "/sys/kernel/config/rdma_cm/$IBDEV" ] ; then
-	mkdir /sys/kernel/config/rdma_cm/$IBDEV
+	mkdir -p /sys/kernel/config/rdma_cm/$IBDEV
 	if [[ $? != 0 ]] ; then
 		>&2 echo " - Failed to create /sys/kernel/config/rdma_cm/$IBDEV"
 		exit 1
