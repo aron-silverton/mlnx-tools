@@ -332,8 +332,8 @@ if [[ $CACHE_LINE_SIZE != "00" ]] ; then
 	config_trust_mode
 	config_pfc
 	enable_congestion_control
+	set_cnp_priority
 fi
-set_cnp_priority
 
 echo ""
 if [[ $CC_FLAG = "0" ]] ; then
