@@ -1,11 +1,5 @@
 #!/bin/sh
-
-# The lines below can be uncommented if SysV initscripts are being used as
-# opposed to systemd and systemd-networkd. As a consequence, "roce_config" will
-# be called for all interfaces not just RoCE interfaces and some warnings will be  
-# generated. It is recommended to use systemd and the corresponding udev rules and 
-# service unit for configuring RoCE interfaces.
  
-#DEVICE=${1}
+DEVICE=${1}
  
-#[[ -x /usr/bin/roce_config ]] && /usr/bin/roce_config -i ${DEVICE}
+[[ -x /usr/bin/roce_config ]] && /usr/bin/roce_config -i ${DEVICE}
