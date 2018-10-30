@@ -2,8 +2,8 @@
 
 Summary: RDMA userland tools and scripts (Oracle VOS)
 Name: oracle-rdma-tools
-Version: 0.6.0
-Release: 2%{?dist}%{?flavor}
+Version: 0.7.0
+Release: 1%{?dist}%{?flavor}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
 Group: Applications/System
@@ -75,13 +75,11 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Mon Oct 29 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.6.0
+* Tue Oct 30 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0-1
 - roce_config: Adjust configuration steps for VFs (Avinash Repaka) [Orabug: 27482819]
-- ifup-local: Disable running roce_config by default (Aron Silverton) [Orabug: 28122139]
 - roce_config: Disable CNP configuration for VFs (Aron Silverton) [Orabug: 27482819]
 - roce_config: Disable CNP configuration (Aron Silverton) [Orabug: 28600183]
 - roce_config: Fix multi-thread race condition (Aron Silverton) [Orabug: 28730043]
-- Revert "ifup-local: Disable running roce_config by default" (Aron Silverton) [Orabug: 28122139]
 
 * Mon Aug 27 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.6.0-2
 - Add "vos" to RPM release number (Aron Silverton) [Orabug 28550856]
