@@ -1,6 +1,6 @@
-%global flavor vos
+%global flavor ora
 
-Summary: RDMA userland tools and scripts (Oracle VOS)
+Summary: RDMA userland tools and scripts (Oracle Extensions)
 Name: oracle-rdma-tools
 Version: 0.7.0
 Release: 1%{?dist}%{?flavor}
@@ -17,8 +17,7 @@ BuildRequires: python2
 %description
 Mellanox userland tools and scripts
 
-For use on Oracle Linux systems running the Oracle Database Virtual OS
-(VOS) layer.
+For use on Oracle Linux systems running the Oracle Database Virtual OS layer.
 
 
 %prep
@@ -75,6 +74,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Fri Nov 09 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0
+- oracle/spec: Change "vos" to "ora" and update summaries and descriptions [Orabug: 29128747]
+
 * Tue Oct 30 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0-1
 - roce_config: Adjust configuration steps for VFs (Avinash Repaka) [Orabug: 27482819]
 - roce_config: Disable CNP configuration for VFs (Aron Silverton) [Orabug: 27482819]
