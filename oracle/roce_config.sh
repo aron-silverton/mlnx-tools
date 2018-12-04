@@ -266,11 +266,14 @@ if [ -z "$PCI_ADDR" ] ; then
 	exit 1
 fi
 
-#We use cache line size to identify virtual functions. It is 00 for VFs.
-CACHE_LINE_SIZE="$(setpci -s $PCI_ADDR c.b)"
+# Check for the SR-IOV extended capability to identify VFs and PFs.
+# A PF will return a value of '10' and a VF will return NULL.
+#
+# setpci will return 0 if the register exists and 1 if it does not
+# so we should not exit just because we get a non-zero return value
+ECAP_SRIOV="$(setpci -s "$PCI_ADDR" ECAP_SRIOV.b 2> /dev/null)"
 if [[ $? != 0 ]] ; then
-	>&2 echo " - Failed to obtain Cache Line Size"
-	exit 1
+	unset ECAP_SRIOV
 fi
 
 if [[ $TRUST_MODE != "dscp" && $TRUST_MODE != "pcp" ]] ; then
@@ -328,14 +331,12 @@ fi
 set_rocev2_default
 set_tos_mapping
 set_default_tos
-if [[ $CACHE_LINE_SIZE != "00" ]] ; then
+
+# Only do the following for PFs (ECAP_SRIOV is not NULL)
+if [[ -n $ECAP_SRIOV ]] ; then
 	config_trust_mode
 	config_pfc
 	enable_congestion_control
-	# set_cnp_priority() does not work in secure boot environments. This step
-	# is redundant because these settings are made in the firmware images for
-	# Exadata so we simply do not execute this function.
-	#set_cnp_priority
 fi
 
 echo ""

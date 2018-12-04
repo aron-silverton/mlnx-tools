@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Tue Dec 04 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0
+- roce_config: Do configuration based on PF or VF (Aron Silverton) [Orabug: 27482819]
+
 * Fri Nov 09 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0-2
 - spec: Change "vos" to "ora" and update summaries and descriptions [Orabug: 29128747]
 
