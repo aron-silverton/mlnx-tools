@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Fri Dec 21 2018  Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0
+- roce_config: Fix NETDEV matching and parsing (Aron Silverton) [Orabug: 29030625]
+
 * Tue Dec 04 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0
 - roce_config: Do configuration based on PF or VF (Aron Silverton) [Orabug: 27482819]
 

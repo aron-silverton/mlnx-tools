@@ -252,12 +252,12 @@ if [[ $? != 0 ]] ; then
 	exit 1
 fi
 
-IBDEV="$(ibdev2netdev | grep "$NETDEV" | head -1 | cut -f 1 -d " ")"
+IBDEV="$(ibdev2netdev | grep " $NETDEV " | cut -f 1 -d " ")"
 if [ -z "$IBDEV" ] ; then
 	>&2 echo " - netdev \"$NETDEV\" doesn't have a corresponding ibdev"
 	exit 1
 fi
-PORT="$(ibdev2netdev | grep $NETDEV | head -1 | cut -f 3 -d " ")"
+PORT="$(ibdev2netdev | grep " $NETDEV " | cut -f 3 -d " ")"
 echo "NETDEV=$NETDEV; IBDEV=$IBDEV; PORT=$PORT"
 
 PCI_ADDR="$(grep PCI_SLOT_NAME /sys/class/net/$NETDEV/device/uevent | cut -d "=" -f 2)"
