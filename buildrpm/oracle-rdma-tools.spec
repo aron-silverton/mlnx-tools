@@ -2,8 +2,8 @@
 
 Summary: RDMA userland tools and scripts (Oracle Extensions)
 Name: oracle-rdma-tools
-Version: 0.7.0
-Release: 2%{?dist}%{?flavor}
+Version: 0.7.1
+Release: 1%{?dist}%{?flavor}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
 Group: Applications/System
@@ -74,11 +74,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Fri Dec 21 2018  Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0
-- roce_config: Fix NETDEV matching and parsing (Aron Silverton) [Orabug: 29030625]
-
-* Tue Dec 04 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0
+* Tue Jan 08 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.1-1
 - roce_config: Do configuration based on PF or VF (Aron Silverton) [Orabug: 27482819]
+- roce_config: Fix NETDEV matching and parsing (Aron Silverton) [Orabug: 29030625]
 
 * Fri Nov 09 2018 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.0-2
 - spec: Change "vos" to "ora" and update summaries and descriptions [Orabug: 29128747]
