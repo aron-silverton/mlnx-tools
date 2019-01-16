@@ -76,6 +76,7 @@ rm -rf %{buildroot}
 %changelog
 * Mon Mar 04 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.1
 - roce_config: Update MINOR_VERSION (Aron Silverton) [Orabug: 29438055]
+- roce_config: Update the host ToS map (Santosh Shilimkar) [Orabug: 29222557]
 
 * Tue Jan 08 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.1-1
 - roce_config: Do configuration based on PF or VF (Aron Silverton) [Orabug: 27482819]
