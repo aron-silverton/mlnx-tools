@@ -46,9 +46,10 @@ CC_FLAG=1
 DEFAULT_TOS=32
 TOS_MAP=32,32,64,96,128,160,176,64
 PFC_CONFIG=""
+DEFAULT_BUFFER_SIZE=32768,229120,0,0,0,0,0,0
 DEFAULT_PFC_CONFIG=0,1,1,1,1,1,1,0
 MAJOR_VERSION=1
-MINOR_VERSION=11
+MINOR_VERSION=12
 
 echo ""
 
@@ -200,6 +201,21 @@ set_cnp_priority() {
 	fi
 }
 
+config_buffers() {
+	if [[ $BUFFER_SIZE == "" ]] ; then
+		BUFFER_SIZE=$DEFAULT_BUFFER_SIZE;
+	fi
+
+	mlnx_qos -i $NETDEV --buffer_size=$BUFFER_SIZE > /dev/null
+	if [[ $? != 0 ]] ; then
+		>&2 echo " - Configuring buffers failed"
+		exit 1
+	else
+		echo " + Buffers are configured as $BUFFER_SIZE"
+	fi
+}
+
+
 if [[ $# -gt 8 || $# -lt 2 ]]
 then
 	print_usage
@@ -222,6 +238,9 @@ case $1 in
 		;;
 	-p )	shift
 		PFC_CONFIG=$1
+		;;
+	-b )    shift
+		BUFFER_SIZE=$1
 		;;
 	-v )	print_version
 		exit
@@ -337,6 +356,7 @@ if [[ -n $ECAP_SRIOV ]] ; then
 	config_trust_mode
 	config_pfc
 	enable_congestion_control
+	config_buffers
 fi
 
 echo ""
