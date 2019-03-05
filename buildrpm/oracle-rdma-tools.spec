@@ -2,7 +2,7 @@
 
 Summary: RDMA userland tools and scripts (Oracle Extensions)
 Name: oracle-rdma-tools
-Version: 0.7.1
+Version: 0.8.0
 Release: 1%{?dist}%{?flavor}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
@@ -74,7 +74,7 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
-* Mon Mar 04 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.7.1
+* Mon Mar 04 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.8.0-1
 - roce_config: Update MINOR_VERSION (Aron Silverton) [Orabug: 29438055]
 - roce_config: Update the host ToS map (Santosh Shilimkar) [Orabug: 29222557]
 - roce_config: Set interface Rx buffer size defaults (Aron Silverton) [Orabug: 28716205]
