@@ -49,7 +49,7 @@ PFC_CONFIG=""
 DEFAULT_BUFFER_SIZE=32768,229120,0,0,0,0,0,0
 DEFAULT_PFC_CONFIG=0,1,1,1,1,1,1,0
 MAJOR_VERSION=1
-MINOR_VERSION=12
+MINOR_VERSION=13
 
 echo ""
 
@@ -148,8 +148,7 @@ config_pfc() {
 }
 
 set_cc_algo_mask() {
-	yes | mstconfig -d $PCI_ADDR set ROCE_CC_PRIO_MASK_P1=255 ROCE_CC_PRIO_MASK_P2=255 \
-	ROCE_CC_ALGORITHM_P1=ECN ROCE_CC_ALGORITHM_P2=ECN > /dev/null
+	yes | mstconfig -d $PCI_ADDR_FUNC0 set ROCE_CC_PRIO_MASK_P${PORT}=255 ROCE_CC_ALGORITHM_P${PORT}=ECN > /dev/null
 	if [[ $? != 0 ]] ; then
 		>&2 echo " - Setting congestion control algo/mask failed"
 		exit 1
@@ -168,7 +167,7 @@ enable_congestion_control() {
 			echo " + Congestion control enabled"
 		fi
 	else
-		CC_VARS="$(mstconfig -d $PCI_ADDR q | grep ROCE_CC | awk '{print $NF}')"
+		CC_VARS="$(mstconfig -d $PCI_ADDR_FUNC0 q | grep ROCE_CC | awk '{print $NF}')"
 		if [[ $? != 0 ]] ; then
 			>&2 echo " - mstconfig query failed"
 			exit 1
@@ -284,6 +283,19 @@ if [ -z "$PCI_ADDR" ] ; then
 	>&2 echo " - Failed to obtain PCI ADDRESS for netdev \"$NETDEV\""
 	exit 1
 fi
+
+#
+# SECURE BOOT ISSUE
+#
+# The PCI device is BUS:DEVICE.FUNCTION, e.g., 13:00.0 and 13:00.1.
+# Because of the dual-port hack being used to change the single-PF
+# dual-port HCA into something that looks like dual-PF each with a
+# single port, we can only access the device using the first
+# function. So, always change the .FUNCTION to '0' and use that
+# when using mstconfig. This is not needed when secure boot is not
+# enabled but it will work. It's simpler to do this all the time
+# than to figure out if we are using secure boot or not.
+PCI_ADDR_FUNC0="${PCI_ADDR//.1/.0}"
 
 # Check for the SR-IOV extended capability to identify VFs and PFs.
 # A PF will return a value of '10' and a VF will return NULL.
