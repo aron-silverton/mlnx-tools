@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Mon Jun 24 2019 Aron Silverton <aorn.silverton@oracle.com> - 0:0.8.1
+- roce_config: Update the host ToS map again (Santosh Shilimkar) [ Orabug: 29922090]
+
 * Thu Apr 04 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.8.1-1
 - roce_config: Fix setting congestion control parameters (Aron Silverton) [Orabug: 29205754]
 
