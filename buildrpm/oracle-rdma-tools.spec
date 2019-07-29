@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Mon Jul 29 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.8.2
+- ifup-local: Use bash instead of sh (Aron Silverton) [Orabug: 28122139]
+
 * Mon Jun 24 2019 Aron Silverton <aorn.silverton@oracle.com> - 0:0.8.2-1
 - roce_config: Update the host ToS map again (Santosh Shilimkar) [ Orabug: 29922090]
 
