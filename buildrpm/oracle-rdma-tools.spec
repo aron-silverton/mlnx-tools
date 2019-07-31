@@ -54,6 +54,7 @@ install -D -m 0755 ofed_scripts/show_gids %{buildroot}%{_sbindir}/show_gids
 install -D -m 0755 oracle/roce_config.sh %{buildroot}%{_bindir}/roce_config
 install -D -m 0755 oracle/roce_config_persistent.sh %{buildroot}%{_bindir}/roce_config_persistent
 install -D -m 0755 oracle/ifup-local %{buildroot}%{_sbindir}/ifup-local
+install -D -m 0644 oracle/roce.interfaces-conf %{buildroot}%{_sysconfdir}/rdma/roce-interfaces.conf
 
 if [ "$(echo %{_prefix} | sed -e 's@/@@g')" != "usr" ]; then
 	conf_env=/etc/profile.d/mlnx-tools.sh
@@ -70,12 +71,15 @@ rm -rf %{buildroot}
 
 %files -f mlnx-tools-files
 %defattr(-,root,root,-)
+%dir %{_sysconfdir}/rdma
+%config(noreplace) %{_sysconfdir}/rdma/roce-interfaces.conf
 %{_sbindir}/*
 %{_bindir}/*
 
 %changelog
-* Mon Jul 29 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.8.2
+* Thu Aug 01 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.8.2
 - ifup-local: Use bash instead of sh (Aron Silverton) [Orabug: 28122139]
+- ifup-local: Configure specific interfaces for RoCE (Aron Silverton) [Orabug: 28122139]
 
 * Mon Jun 24 2019 Aron Silverton <aorn.silverton@oracle.com> - 0:0.8.2-1
 - roce_config: Update the host ToS map again (Santosh Shilimkar) [ Orabug: 29922090]

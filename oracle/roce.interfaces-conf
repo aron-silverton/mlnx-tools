@@ -1,0 +1,30 @@
+#
+# Script that ifup-local uses to configure interfaces for RoCE
+# 
+# Interfaces listed in ROCE_INTERFACES_LIST and/or
+# ROCE_INTERFACES_BASE will be configured using this script.
+#
+ROCE_CONFIG=/bin/roce_config
+
+#
+# List of RoCE capable interfaces for exact match - space separated list of names
+#
+# Interface names in this list will be matched by ifup-local and configured for
+# RoCE.
+#
+# Example: ROCE_INTERFACES_LIST="enp94s0f0 enp94s0f1"
+#          ROCE_INTERFACES_LIST=""
+#          ROCE_INTERFACES_LIST=
+# 
+ROCE_INTERFACES_LIST=
+
+#
+# Base name for RoCE capable interfaces (e.g, eth) - single entry only
+#
+# Interface names consisting of this base and trailing digits will be
+# matched by ifup-local and configured for RoCE.
+#
+# Example: ROCE_INTERFACES_BASE="re"
+#          ROCE_INTERFACES_BASE=""
+#          ROCE_INTERFACES_BASE=
+ROCE_INTERFACES_BASE="re"

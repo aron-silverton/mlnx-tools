@@ -1,5 +1,80 @@
 #!/bin/bash
- 
-DEVICE=${1}
- 
-[[ -x /usr/bin/roce_config ]] && /usr/bin/roce_config -i ${DEVICE}
+
+if [ "$(id -u)" != 0 ]; then
+   >&2 echo "$0: Must run as root!"
+   exit 1
+fi
+
+INTF_NAME=$1
+
+>&2 echo "$0: /sbin/ifup-local $INTF_NAME:"
+
+#
+# RoCE Interfaces only
+#
+configure_roce() {
+
+    # Do not "exit" from this function. If something goes wrong, return so that
+    # any other functions in this script can execute.
+
+    ROCE_PARAMS="/etc/rdma/roce-interfaces.conf"
+    # Variables read from ROCE_PARAMS:
+    #    ROCE_CONFIG          - The script used to configured interfaces for RoCE
+    #    ROCE_INTERFACES_LIST - A list of interfaces names to try to match exactly
+    #    ROCE_INTERFACES_BASE - An interface base name to match as a wildcard
+
+    >&2 echo "$0:  + RoCE configuration..."
+
+    if [[ ! -r $ROCE_PARAMS ]]; then
+        >&2 echo "$0:  - Configuration file '$ROCE_PARAMS' is not readable."
+        >&2 echo "$0: RoCe Configuration: Nothing to do for $INTF_NAME."
+        return 1
+    else
+        . $ROCE_PARAMS
+    fi
+
+    if [[ -z $ROCE_INTERFACES_LIST ]] && [[ -z $ROCE_INTERFACES_BASE ]]; then
+        >&2 echo "$0:  - No RoCE interfaces specified in '$ROCE_PARAMS'."
+        >&2 echo "$0: RoCE Configuration: Nothing to do for $INTF_NAME."
+        return 1
+    fi
+
+    if [[ ! -x $ROCE_CONFIG ]]; then
+        >&2 echo "$0:  - '$ROCE_CONFIG' is not executable."
+        >&2 echo "$0: RoCE Configuration: Nothing to do for $INTF_NAME."
+        return 1
+    elif [[ $ROCE_INTERFACES_LIST =~ (^|[[:space:]])"$INTF_NAME"($|[[:space:]]) ]]; then
+        >&2 echo "$0:  + Matched (exact) interface $INTF_NAME."
+        >&2 echo "$0:  + Roce Configuration: $ROCE_CONFIG -i $INTF_NAME..."
+        $ROCE_CONFIG -i "$INTF_NAME"
+        return $?
+    elif [[ ${INTF_NAME} =~ ^"${ROCE_INTERFACES_BASE}"[[:digit:]]+$ ]]; then
+        >&2 echo "$0:  + Matched (wildcard) interface $INTF_NAME."
+        >&2 echo "$0:  + RoCE Configuration: $ROCE_CONFIG -i $INTF_NAME..."
+        $ROCE_CONFIG -i "$INTF_NAME"
+        return $?
+    else
+        >&2 echo "$0:  - Interface $INTF_NAME not matched in '$ROCE_PARAMS'."
+        >&2 echo "$0: RoCE Configuration: Nothing to do for $INTF_NAME."
+        return 1
+    fi
+
+    >&2 echo "$0: Finished /sbin/ifup-local RoCE configuration for $INTF_NAME."
+
+}
+
+#
+# Non-RoCE interface configuration can be specified here
+#
+configure_other() {
+
+    # Do not "exit" from this function. If something goes wrong, return so that
+    # any other functions in this script can execute.
+
+    >&2 echo "$0:  + Non-RoCE Configuration..."
+    >&2 echo "$0: Non-RoCE Configuration: Nothing to do for $INTF_NAME."
+    return
+}
+
+configure_roce
+configure_other
