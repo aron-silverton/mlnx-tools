@@ -2,7 +2,7 @@
 
 Summary: RDMA userland tools and scripts (Oracle Extensions)
 Name: oracle-rdma-tools
-Version: 0.9.0
+Version: 0.9.1
 Release: 1%{?dist}%{?flavor}
 License: GPLv2
 Url: https://github.com/aron-silverton/mlnx-tools
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Mon Aug 12 2019 Mark Haywood <mark.haywood@oracle.com> - 0:0.9.1-1
+- roce-config: disable lane 6 on PFC 6 [Orabug: 30155413]
+
 * Fri Aug 02 2019 Aron Silverton <aron.silverton@oracle.com> - 0:0.9.0-1
 - ifup-local: Use bash instead of sh (Aron Silverton) [Orabug: 28122139]
 - ifup-local: Configure specific interfaces for RoCE (Aron Silverton) [Orabug: 28122139]
